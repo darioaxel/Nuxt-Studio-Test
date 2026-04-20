@@ -7,7 +7,8 @@ const navigations = inject<Record<string, Ref<ContentNavigationItem[]>>>('naviga
 const allNavigation = computed(() => [
   ...(navigations?.docs?.value || []),
   ...(navigations?.ayuda?.value || []),
-  ...(navigations?.admin?.value || [])
+  ...(navigations?.admin?.value || []),
+  ...(navigations?.bienvenida?.value || [])
 ])
 </script>
 

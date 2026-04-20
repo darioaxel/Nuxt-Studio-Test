@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import type { ContentNavigationItem } from '@nuxt/content'
 import type { Collections } from '@nuxt/content'
+import { findPageHeadline } from '@nuxt/content/utils'
+
+definePageMeta({
+  layout: 'docs'
+})
 
 const route = useRoute()
 const section = route.params.section as string
@@ -19,12 +25,26 @@ useSeoMeta({
   description,
   ogDescription: description
 })
+
+const navigations = inject<Record<string, Ref<ContentNavigationItem[]>>>('navigation')
+const navigation = computed(() => navigations?.[section]?.value || [])
+
+const headline = computed(() => findPageHeadline(navigation.value, page.value?.path))
 </script>
 
 <template>
-  <ContentRenderer
-    v-if="page"
-    :value="page"
-    :prose="false"
-  />
+  <UPage v-if="page">
+    <UPageHeader
+      :title="page.title"
+      :description="page.description"
+      :headline="headline"
+    />
+
+    <UPageBody>
+      <ContentRenderer
+        v-if="page"
+        :value="page"
+      />
+    </UPageBody>
+  </UPage>
 </template>

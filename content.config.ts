@@ -29,6 +29,11 @@ export default defineContentConfig({
       type: 'page',
       source: 'admin/**',
       schema: pageSchema
+    }),
+    bienvenida: defineCollection({
+      type: 'page',
+      source: 'bienvenida/**',
+      schema: pageSchema
     })
   }
 })

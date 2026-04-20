@@ -29,6 +29,62 @@ Documentación de prueba construida con Nuxt UI, Nuxt Content y Nuxt Studio.
 ::u-page-section
 ---
 class: dark:bg-neutral-950
+title: Documentaciones
+description: Explora cada una de las secciones de documentación disponibles.
+---
+#features
+  :::u-page-feature
+  ---
+  icon: i-lucide-book-open
+  to: /docs
+  ---
+  #title
+  Documentación
+
+  #description
+  Documentación principal del proyecto con guías de instalación, uso y referencia.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-help-circle
+  to: /ayuda
+  ---
+  #title
+  Ayuda
+
+  #description
+  Centro de ayuda con guías paso a paso, soporte y preguntas frecuentes.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-shield
+  to: /admin
+  ---
+  #title
+  Admin
+
+  #description
+  Guías de administración del sistema, gestión y configuración avanzada.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-hand
+  to: /bienvenida
+  ---
+  #title
+  Bienvenida
+
+  #description
+  Guía de bienvenida para familiarizarte con la plataforma y dar tus primeros pasos.
+  :::
+::
+
+::u-page-section
+---
+class: dark:bg-neutral-950
 ---
 #title
 Características
