@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ContentNavigationItem } from '@nuxt/content'
+import type { Collections } from '@nuxt/content'
 import { findPageHeadline } from '@nuxt/content/utils'
 import { withoutTrailingSlash } from 'ufo'
 
@@ -9,17 +10,21 @@ definePageMeta({
 
 const route = useRoute()
 const { toc } = useAppConfig()
-const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
+const section = route.params.section as string
 
-const path = withoutTrailingSlash(route.path) || '/'
+const path = computed(() => {
+  const slug = route.params.slug
+  const slugPath = Array.isArray(slug) ? slug.join('/') : slug
+  return withoutTrailingSlash(`/${section}/${slugPath || ''}`) || `/${section}`
+})
 
-const { data: page } = await useAsyncData(path, () => queryCollection('docs').path(path).first())
+const { data: page } = await useAsyncData(path.value, () => queryCollection(section as keyof Collections).path(path.value).first())
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
-const { data: surround } = await useAsyncData(`${path}-surround`, () => {
-  return queryCollectionItemSurroundings('docs', path, {
+const { data: surround } = await useAsyncData(`${path.value}-surround`, () => {
+  return queryCollectionItemSurroundings(section as keyof Collections, path.value, {
     fields: ['description']
   })
 })
@@ -34,7 +39,10 @@ useSeoMeta({
   ogDescription: description
 })
 
-const headline = computed(() => findPageHeadline(navigation?.value, page.value?.path))
+const navigations = inject<Record<string, Ref<ContentNavigationItem[]>>>('navigation')
+const navigation = computed(() => navigations?.[section]?.value || [])
+
+const headline = computed(() => findPageHeadline(navigation.value, page.value?.path))
 
 defineOgImageComponent('Docs', {
   headline: headline.value

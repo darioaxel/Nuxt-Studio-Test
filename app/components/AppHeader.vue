@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import type { ContentNavigationItem } from '@nuxt/content'
 
-const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
-
 const { header } = useAppConfig()
+
+const navigations = inject<Record<string, Ref<ContentNavigationItem[]>>>('navigation')
+const allNavigation = computed(() => [
+  ...(navigations?.docs?.value || []),
+  ...(navigations?.ayuda?.value || []),
+  ...(navigations?.admin?.value || [])
+])
 </script>
 
 <template>
@@ -65,7 +70,7 @@ const { header } = useAppConfig()
     <template #body>
       <UContentNavigation
         highlight
-        :navigation="navigation"
+        :navigation="allNavigation"
       />
     </template>
   </UHeader>

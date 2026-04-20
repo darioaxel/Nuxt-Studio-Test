@@ -1,8 +1,18 @@
 <script setup lang="ts">
 const { seo } = useAppConfig()
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'))
-const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {
+const { data: navigationDocs } = await useAsyncData('navigation-docs', () => queryCollectionNavigation('docs'))
+const { data: navigationAyuda } = await useAsyncData('navigation-ayuda', () => queryCollectionNavigation('ayuda'))
+const { data: navigationAdmin } = await useAsyncData('navigation-admin', () => queryCollectionNavigation('admin'))
+
+const { data: files } = useLazyAsyncData('search', async () => {
+  const [docs, ayuda, admin] = await Promise.all([
+    queryCollectionSearchSections('docs'),
+    queryCollectionSearchSections('ayuda'),
+    queryCollectionSearchSections('admin')
+  ])
+  return [...docs, ...ayuda, ...admin]
+}, {
   server: false
 })
 
@@ -25,7 +35,11 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-provide('navigation', navigation)
+provide('navigation', {
+  docs: navigationDocs,
+  ayuda: navigationAyuda,
+  admin: navigationAdmin
+})
 </script>
 
 <template>
@@ -45,7 +59,11 @@ provide('navigation', navigation)
     <ClientOnly>
       <LazyUContentSearch
         :files="files"
-        :navigation="navigation"
+        :navigation="[
+          ...(navigationDocs || []),
+          ...(navigationAyuda || []),
+          ...(navigationAdmin || [])
+        ]"
       />
     </ClientOnly>
   </UApp>

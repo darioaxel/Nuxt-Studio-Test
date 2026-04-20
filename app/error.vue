@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
+import type { ContentNavigationItem } from '@nuxt/content'
 
 defineProps<{
   error: NuxtError
@@ -16,12 +17,23 @@ useSeoMeta({
   description: 'We are sorry but this page could not be found.'
 })
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'))
-const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {
+const navigations = inject<Record<string, Ref<ContentNavigationItem[]>>>('navigation')
+const allNavigation = computed(() => [
+  ...(navigations?.docs?.value || []),
+  ...(navigations?.ayuda?.value || []),
+  ...(navigations?.admin?.value || [])
+])
+
+const { data: files } = useLazyAsyncData('search', async () => {
+  const [docs, ayuda, admin] = await Promise.all([
+    queryCollectionSearchSections('docs'),
+    queryCollectionSearchSections('ayuda'),
+    queryCollectionSearchSections('admin')
+  ])
+  return [...docs, ...ayuda, ...admin]
+}, {
   server: false
 })
-
-provide('navigation', navigation)
 </script>
 
 <template>
@@ -35,7 +47,7 @@ provide('navigation', navigation)
     <ClientOnly>
       <LazyUContentSearch
         :files="files"
-        :navigation="navigation"
+        :navigation="allNavigation"
       />
     </ClientOnly>
   </UApp>
