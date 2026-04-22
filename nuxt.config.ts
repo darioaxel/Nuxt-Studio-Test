@@ -17,6 +17,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   content: {
+    database: {
+      type: 'pglite',
+      dataDir: '.data/pglite'
+    },
     build: {
       markdown: {
         toc: {
@@ -58,7 +62,7 @@ export default defineNuxtConfig({
   studio: {
     repository: {
       provider: 'github',
-      owner: 'darioaxel',
+      owner: 'FPVirtual',
       repo: 'Nuxt-Studio-Test',
       branch: 'main'
     }

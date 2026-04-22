@@ -12,10 +12,10 @@ export default defineAppConfig({
     }
   },
   seo: {
-    siteName: 'Nuxt Studio Test'
+    siteName: 'FPVirtual Test de Nuxt Studio'
   },
   header: {
-    title: 'Nuxt Studio Test',
+    title: 'FPVirtual Test de Nuxt Studio',
     to: '/',
     logo: {
       alt: '',
